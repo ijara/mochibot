@@ -1,0 +1,28 @@
+{
+  "name": "mochibot",
+  "version": "1.0.0",
+  "description": "discord bot",
+  "main": "init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ijara/mochibot.git"
+  },
+  "keywords": [
+    "bot",
+    "discord",
+    "mochi",
+    "mochibot"
+  ],
+  "author": "ijara",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ijara/mochibot/issues"
+  },
+  "homepage": "https://github.com/ijara/mochibot#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
