@@ -1,3 +1,6 @@
 # mochibot
 bot para discord
-test
+##¿¿ how to start
+- rename the .env.delete to .env
+- add your token
+- win
