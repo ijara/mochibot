@@ -2,11 +2,12 @@
  * A ping pong bot, whenever you send "ping", it replies "pong".
  */
 
+require('dotenv').config();
 // Import the discord.js module
 const Discord = require('discord.js');
-
 // Create an instance of a Discord client
 const client = new Discord.Client();
+var myAPIKey = process.env.MYAPIKEY;
 
 /**
  * The ready event is vital, it means that only _after_ this will your bot start reacting to information
@@ -26,4 +27,4 @@ client.on('message', message => {
 });
 
 // Log our bot in using the token from https://discordapp.com/developers/applications/me
-client.login('NjAxNTIyNDEzNDg1Njg2ODI0.XTDtaw.FAmhtOMN7WDajMag4Xnn96ApV6M');
+client.login(myAPIKey);
