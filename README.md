@@ -1,5 +1,5 @@
 # mochibot
-bot para discord
+discord bot. It can play youtube songs. WIP
 
 ## commands
 
