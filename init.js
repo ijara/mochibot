@@ -51,10 +51,10 @@ async function execute(message, serverQueue) {
 	const args = message.content.split(/ (.+)/)[1];
 
 	const voiceChannel = message.member.voiceChannel;
-	if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!');
+	if (!voiceChannel) return message.channel.send('hiss ! You need to be in a voice channel to play music!');
 	const permissions = voiceChannel.permissionsFor(message.client.user);
 	if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-		return message.channel.send('I need the permissions to join and speak in your voice channel!');
+		return message.channel.send('hiss ! I need the permissions to join and speak in your voice channel!');
 	}
 	try {
 		const songInfo = await ytdl.getInfo(args);
@@ -97,7 +97,7 @@ async function add_song(songInfo,serverQueue,message,voiceChannel){
 			var connection = await voiceChannel.join();
 			queueContruct.connection = connection;
 			play(message.guild, queueContruct.songs[0]);
-			 message.channel.send(`${song.title} has been added to the queue!`);
+			 message.channel.send(`${song.title} has been added to the queue!, miau miau`);
 
 		} catch (err) {
 			console.log(err);
@@ -107,20 +107,20 @@ async function add_song(songInfo,serverQueue,message,voiceChannel){
 	} else {
 		serverQueue.songs.push(song);
 		console.log(serverQueue.songs);
-		return message.channel.send(`${song.title} has been added to the queue!`);
+		return message.channel.send(`${song.title} has been added to the queue!, nya!`);
 	}
 
 
 }
 
 function skip(message, serverQueue) {
-	if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music!');
-	if (!serverQueue) return message.channel.send('There is no song that I could skip!');
+	if (!message.member.voiceChannel) return message.channel.send('ñao? You have to be in a voice channel to stop the music!');
+	if (!serverQueue) return message.channel.send('ñao? There is no song that I could skip!');
 	serverQueue.connection.dispatcher.end();
 }
 
 function stop(message, serverQueue) {
-	if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music!');
+	if (!message.member.voiceChannel) return message.channel.send('ñao? You have to be in a voice channel to stop the music!');
 	serverQueue.songs = [];
 	serverQueue.connection.dispatcher.end();
 }
@@ -136,7 +136,7 @@ function play(guild, song) {
 
 	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
 		.on('end', () => {
-			console.log('Music ended!');
+			console.log('Music ended!, slurp slurp! 🐈');
 			serverQueue.songs.shift();
 			play(guild, serverQueue.songs[0]);
 		})
