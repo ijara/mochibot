@@ -3,8 +3,8 @@ bot para discord
 
 ## commands
 
-- !play <youtube url>
-- !play <title>
+- !play < youtube url >
+- !play < title >
 - !stop
 - !next
 - !skip
