@@ -1,10 +1,12 @@
 require('dotenv').config();
-var myAPIKey = process.env.MYAPIKEY;
+var KEYDISCORD = process.env.KEYDISCORD;
+var KEYYOUTUBE = process.env.KEYYOUTUBE;
 const Discord = require('discord.js');
 const {
 	prefix
 } = require('./config.json');
 const ytdl = require('ytdl-core');
+const searchYoutube = require('youtube-api-v3-search');
 
 const client = new Discord.Client();
 
@@ -34,6 +36,9 @@ client.on('message', async message => {
 	} else if (message.content.startsWith(`${prefix}skip`)) {
 		skip(message, serverQueue);
 		return;
+	} else if (message.content.startsWith(`${prefix}next`)) {
+		skip(message, serverQueue);
+		return;
 	} else if (message.content.startsWith(`${prefix}stop`)) {
 		stop(message, serverQueue);
 		return;
@@ -52,40 +57,88 @@ async function execute(message, serverQueue) {
 		return message.channel.send('I need the permissions to join and speak in your voice channel!');
 	}
 
-	const songInfo = await ytdl.getInfo(args[1]);
-	const song = {
-		title: songInfo.title,
-		url: songInfo.video_url,
-	};
 
-	if (!serverQueue) {
-		const queueContruct = {
-			textChannel: message.channel,
-			voiceChannel: voiceChannel,
-			connection: null,
-			songs: [],
-			volume: 5,
-			playing: true,
+	try {
+		const songInfo = await ytdl.getInfo(args[1]);
+		const song = {
+			title: songInfo.title,
+			url: songInfo.video_url,
 		};
-
-		queue.set(message.guild.id, queueContruct);
-
-		queueContruct.songs.push(song);
-
-		try {
-			var connection = await voiceChannel.join();
-			queueContruct.connection = connection;
-			play(message.guild, queueContruct.songs[0]);
-		} catch (err) {
-			console.log(err);
-			queue.delete(message.guild.id);
-			return message.channel.send(err);
+	
+		if (!serverQueue) {
+			const queueContruct = {
+				textChannel: message.channel,
+				voiceChannel: voiceChannel,
+				connection: null,
+				songs: [],
+				volume: 5,
+				playing: true,
+			};
+	
+			queue.set(message.guild.id, queueContruct);
+	
+			queueContruct.songs.push(song);
+	
+			try {
+				var connection = await voiceChannel.join();
+				queueContruct.connection = connection;
+				play(message.guild, queueContruct.songs[0]);
+			} catch (err) {
+				console.log(err);
+				queue.delete(message.guild.id);
+				return message.channel.send(err);
+			}
+		} else {
+			serverQueue.songs.push(song);
+			console.log(serverQueue.songs);
+			return message.channel.send(`${song.title} has been added to the queue!`);
 		}
-	} else {
-		serverQueue.songs.push(song);
-		console.log(serverQueue.songs);
-		return message.channel.send(`${song.title} has been added to the queue!`);
+	} catch (error) {
+		const options = {
+			q:args[1],
+			part:'snippet',
+			type:'video'
+		  }
+		  
+		  let result = await searchYoutube(KEYYOUTUBE,options);
+		  const  songInfo = await ytdl.getInfo( result.items[0].id.videoId );
+		  const song = {
+			title: songInfo.title,
+			url: songInfo.video_url,
+		};
+	
+		if (!serverQueue) {
+			const queueContruct = {
+				textChannel: message.channel,
+				voiceChannel: voiceChannel,
+				connection: null,
+				songs: [],
+				volume: 5,
+				playing: true,
+			};
+	
+			queue.set(message.guild.id, queueContruct);
+	
+			queueContruct.songs.push(song);
+	
+			try {
+				var connection = await voiceChannel.join();
+				queueContruct.connection = connection;
+				play(message.guild, queueContruct.songs[0]);
+			} catch (err) {
+				console.log(err);
+				queue.delete(message.guild.id);
+				return message.channel.send(err);
+			}
+		} else {
+			serverQueue.songs.push(song);
+			console.log(serverQueue.songs);
+			return message.channel.send(`${song.title} has been added to the queue!`);
+		}
 	}
+
+
+	
 
 }
 
@@ -122,4 +175,4 @@ function play(guild, song) {
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
 }
 
-client.login(myAPIKey);
+client.login(KEYDISCORD);
